@@ -1947,6 +1947,9 @@ fi
 }
 
 
+# https://ubuntu-mate.community/t/how-to-completely-remove-snap/19395
+
+
 # ----------------------------------------------------------------------------------------
 
 
@@ -5962,15 +5965,36 @@ done
 
 
 
-# O tee é um comando que lê a entrada e a escreve tanto na saída padrão (no terminal) quanto em um arquivo especificado.
-# A opção -a (append) faz com que o tee adicione a mensagem ao final de um arquivo de log existente (especificado pela variável $log), em vez de sobrescrevê-lo.
+# O tee é um comando que lê a entrada e a escreve tanto na saída padrão (no terminal) 
+# quanto em um arquivo especificado.
+
+# A opção -a (append) faz com que o tee adicione a mensagem ao final de um arquivo de log 
+# existente (especificado pela variável $log), em vez de sobrescrevê-lo.
 
 
 
+# Desative os serviços inúteis que iniciam junto com o Ubuntu
 
+# vai deixar o Boot do Ubuntu mais rápido. Se você já visitou conhece o programa 
+# "Aplicativos de sessão" do Ubuntu deve ter percebido que não aparecem todos os serviços 
+# que inicializam junto com o sistema por lá. 
+
+# Para melhor gerenciar e modificar a performance do sistema, principalmente no tempo de 
+# boot podemos desativar alguns dos serviços que não utilizamos.
 
 
 # sudo sed -i "s/NoDisplay=true/NoDisplay=false/g" /etc/xdg/autostart/*.desktop
+
+
+# Agora que todas as entradas estão visíveis.
+
+# Desative serviços que você não usa, mas tome cuidado para não desativar serviços ou 
+# softwares importantes para o sistema. Se você não sabe o que determinado serviço faz, 
+# não o desative.
+
+# Como isso você deverá ganhar alguns segundos no boot.
+
+
 
 
 # sudo: Executa o comando com permissões de superusuário, ou seja, ele concede permissões 
@@ -6054,7 +6078,7 @@ systemd-analyze blame >> "$log"
 # https://medium.com/@leandroembu/melhorando-a-performance-do-ubuntu-em-computadores-fracos-6b60c1a2678#:~:text=Desinstale%20o%20GNOME%20Online%20Accounts&text=Isso%20vai%20remover%20o%20suporte%20%C3%A0s%20Contas,servi%C3%A7o%20(daemon)%20que%20fica%20rodando%20no%20sistema.
 
 # https://www.youtube.com/watch?v=HdyXCSe1aEE
-
+# https://diolinux.com.br/tutoriais/desative-servicos-que-inicializam-junto.html
 
 # ----------------------------------------------------------------------------------------
 
@@ -8310,11 +8334,21 @@ sudo aa-complain "$PROFILE_DIR/$PROFILE_FILE"
 
 # Verificar o status atual do perfil do Firefox
 
-sudo aa-status  | tee -a "$log"
+
+sudo aa-status | tee -a "$log"
 
 
-# Mostrará todos os perfis carregados, destacando quais estão em "complain" e quais estão 
-# em "enforce".
+apparmor_status | grep -v 'unconfined' | grep '/firefox/'
+
+
+# Lista todos os perfis carregados e mostra se o Firefox está:
+
+# Em enforce (restrito)
+
+# Em complain (observação)
+
+# Ou unconfined (sem proteção)
+
 
 
 # Usar esses modos de forma iterativa, testando e ajustando, é a melhor maneira de 
