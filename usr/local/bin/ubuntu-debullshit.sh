@@ -93,6 +93,7 @@
 # https://statplace.com.br/blog/internacionalizacao-i18n/
 # https://pt.wikipedia.org/wiki/Internacionaliza%C3%A7%C3%A3o_(inform%C3%A1tica)
 # https://poeditor.com/
+# https://plus.diolinux.com.br/t/ubuntu-debullshit-porque-nao-retirar-algumas-coisas/72130
 
 
 # ----------------------------------------------------------------------------------------
@@ -3034,6 +3035,9 @@ fi
 
 
 
+# Instalação do Firefox .deb oficial da Mozilla em vez do Snap do Ubuntu.
+
+
 # Configure o APT para dar prioridade a pacotes do repositório da Mozilla:
 
 # echo '
@@ -3041,6 +3045,14 @@ fi
 # Pin: origin packages.mozilla.org
 # Pin-Priority: 1000
 # ' | sudo tee /etc/apt/preferences.d/mozilla 
+
+
+
+# Esse comando cria uma preferência APT que prioriza pacotes vindos de packages.mozilla.org 
+# (o repositório oficial da Mozilla) com prioridade 1000.
+
+# Ou seja, se um pacote existir tanto nesse repositório quanto em outro (como o do 
+# Ubuntu/Snap), o APT vai preferir o da Mozilla.
 
 
     echo '
@@ -3052,8 +3064,20 @@ Pin-Priority: 1000
 
 # Atualize a lista de pacotes e instale o pacote .deb do Firefox:
 
+# Sem o arquivo /etc/apt/preferences.d/mozilla  o apt install -y firefox puxa Snap no Ubuntu.
+
 $package_manager update  2>> "$log" && $package_manager install -y firefox  2>> "$log"
 
+
+# O APT vai baixar o pacote .deb diretamente da Mozilla, não o Snap da Canonical.
+
+# ⚠️ Importante:
+
+# No Ubuntu, por padrão, apt install firefox instala o Snap porque o pacote firefox no 
+# repositório padrão é apenas um stub que redireciona para o Snap.
+
+# Mas com o pinning (Pin: origin packages.mozilla.org) e o repositório da Mozilla 
+# configurado, o APT ignora o stub do Ubuntu e puxa o Firefox .deb nativo.
 
 
 
